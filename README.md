@@ -1,6 +1,6 @@
 # Stopwatch
 Header-only simple utility class that wraps std::chrono to measure execution time in C++11.
-To use this, just include `Stopwatch.hpp` it to your cpp file.
+To use this, just include `Stopwatch.hpp` to your cpp file.
 
 # How to use
 ### Method 1.
