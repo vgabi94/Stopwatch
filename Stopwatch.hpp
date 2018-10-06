@@ -6,17 +6,16 @@
     #include <iostream>
 #endif
 
-#define TYPEDEFS typedef std::chrono::duration<double> sec;         \
-        typedef std::chrono::duration<double, std::milli> milisec;  \
-        typedef std::chrono::duration<double, std::micro> microsec; \
-        typedef std::chrono::duration<double, std::nano> nanosec;
-
 #define DEFAULT_HEADER "Elapsed time: "
 
-#ifdef NOT_AUTO_SW
 namespace benchmark
 {
-    TYPEDEFS
+    typedef std::chrono::duration<double> sec;
+    typedef std::chrono::duration<double, std::milli> milisec;
+    typedef std::chrono::duration<double, std::micro> microsec;
+    typedef std::chrono::duration<double, std::nano> nanosec;
+
+#ifdef NOT_AUTO_SW
     class Stopwatch
     {
     private:
@@ -36,11 +35,8 @@ namespace benchmark
             mStart = std::chrono::steady_clock::now();
         }
     };
-} // benchmark
+
 #else
-namespace benchmark
-{
-    TYPEDEFS
     template<typename T = sec>
     class Stopwatch
     {
@@ -58,26 +54,24 @@ namespace benchmark
         }
 
         Stopwatch() : Stopwatch(DEFAULT_HEADER) { }
-        
+
         ~Stopwatch()
         {
             double elapsed = std::chrono::duration_cast<T>(
                 std::chrono::steady_clock::now() - mStart
-            ).count();
+                ).count();
             std::cout << mHeader << elapsed << mUnit << '\n';
         }
     };
-} // benchmark
+
+#define STOPWATCH_SEC(header) bm::Stopwatch<> sw(header)
+#define STOPWATCH_MILISEC(header) bm::Stopwatch<bm::milisec> sw(header, " ms")
+#define STOPWATCH_MICROSEC(header) bm::Stopwatch<bm::microsec> sw(header, " microsec")
+#define STOPWATCH_NANOSEC(header) bm::Stopwatch<bm::nanosec> sw(header, " ns")
+
 #endif
+} // benchmark
 
 namespace bm = benchmark;
 
-#ifndef NOT_AUTO_SW
-    #define STOPWATCH_SEC(header) bm::Stopwatch<> sw(header)
-    #define STOPWATCH_MILISEC(header) bm::Stopwatch<bm::milisec> sw(header, " ms")
-    #define STOPWATCH_MICROSEC(header) bm::Stopwatch<bm::microsec> sw(header, " microsec")
-    #define STOPWATCH_NANOSEC(header) bm::Stopwatch<bm::nanosec> sw(header, " ns")
-#endif
-
-#undef TYPEDEFS
 #undef DEFAULT_HEADER
