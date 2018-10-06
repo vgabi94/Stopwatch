@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 Gabriel Vaduva
+ * Distributed under the MIT License (http://opensource.org/licenses/MIT)
+ */
 #pragma once
 #include <chrono>
 
